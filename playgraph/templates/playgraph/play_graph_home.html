@@ -1,0 +1,19 @@
+<!doctype html>
+{% load staticfiles %}
+<html>
+<head>
+    <script src="{% static 'lib/angular.min.js' %}"></script>
+    <script src="{% static 'playgraph/js/playgraph.js' %}"></script>
+</head>
+<body ng-app="PlayGraph">
+<div ng-controller="BGGRequestController as reqCtrl">
+    <label>Name:</label>
+    <input type="text" ng-model="reqCtrl.bggUsername">
+    <hr>
+    <button ng-click="reqCtrl.submitRequest()">Get</button>
+    <button ng-click="reqCtrl.submitRequest(true)">Refresh</button>
+    <hr>
+    <img ng-src="https:[[reqCtrl.avatarSrc]]" ng-show="reqCtrl.avatarSrc" />
+</div>
+</body>
+</html>
