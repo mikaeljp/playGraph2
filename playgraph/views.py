@@ -4,7 +4,7 @@ from django.views.generic import View
 
 from lib.bggapi import get_bgg_user, get_bgg_plays
 from playgraph.models import BggUser
-from playgraph.serializers import BggUserSerializer
+from playgraph.serializers import BggUserSerializer, BggPlaySerializer
 
 
 class PlayGraphView(View):
@@ -25,13 +25,19 @@ class PlayGraphDataView(View):
             BggUser.objects.filter(pk=bgg_id).delete()
         try:
             user = BggUser.objects.get(pk=bgg_id)
-            serializer = BggUserSerializer(user)
+            user_serializer = BggUserSerializer(user)
         except BggUser.DoesNotExist:
             # the user has not been cached, fetch the details from BGG and cache them
             data = get_bgg_user(bgg_id)
-            serializer = BggUserSerializer(data=data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-        plays = get_bgg_plays(bgg_id)
-        return JsonResponse(plays, safe=False)
+            user_serializer = BggUserSerializer(data=data)
+            user_serializer.is_valid(raise_exception=True)
+            user_serializer.save()
+            # fetch the plays
+            plays = get_bgg_plays(bgg_id)
+            play_serializer = BggPlaySerializer(data=plays, many=True)
+            play_serializer.is_valid(raise_exception=True)
+            play_serializer.save()
+            user_serializer.plays = play_serializer.data
+
+        return JsonResponse(user_serializer.data, safe=False)
 
