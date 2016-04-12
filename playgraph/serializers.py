@@ -1,23 +1,11 @@
 from rest_framework import serializers
 
-from playgraph.models import BggUser, BggPlay
-
-
-class BggPlaySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = BggPlay
-
-    def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        del ret['id']
-        return ret
+from playgraph.models import BggUser
 
 
 class BggUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = BggUser
-
-    plays = BggPlaySerializer(many=True, read_only=True)
 
     def to_internal_value(self, data):
         if not self.instance:

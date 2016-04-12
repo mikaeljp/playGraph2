@@ -26,10 +26,11 @@
             var vm = this;
             vm.bggUsername = 'mikaeljp';
             vm.submitRequest = submitRequest;
+            vm.avatarSrc = '';
 
-            function updateBggUserData(data) {
-            console.log(data)
-                vm.user = data;
+            function updateBggUserData(bggUser) {
+                console.log(bggUser);
+                vm.avatarSrc = bggUser.avatar_link;
             }
 
             function submitRequest(refresh) {
