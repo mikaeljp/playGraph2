@@ -13,7 +13,14 @@
     <button ng-click="reqCtrl.submitRequest()">Get</button>
     <button ng-click="reqCtrl.submitRequest(true)">Refresh</button>
     <hr>
-    <img ng-src="https:[[reqCtrl.avatarSrc]]" ng-show="reqCtrl.avatarSrc" />
+    <div ng-show="reqCtrl.user">
+        <img ng-src="https:[[reqCtrl.user.avatar_link]]"/>
+        <ul>
+            <li ng-repeat="play in reqCtrl.user.plays track by $index">
+                [[play.date | date]] - [[play.name]]
+            </li>
+        </ul>
+    </div>
 </div>
 </body>
 </html>

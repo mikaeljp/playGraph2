@@ -20,3 +20,8 @@ class BggPlay(models.Model):
     """
     The BggPlay model represents individual game plays by a BggUser
     """
+    id = models.IntegerField(primary_key=True)
+    date = models.DateField(db_index=True)
+    quantity = models.IntegerField()
+    name = models.CharField(max_length=255)
+    user = models.ForeignKey('BggUser', related_name='plays')
