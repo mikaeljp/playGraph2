@@ -12,7 +12,7 @@
         function ($http) {
             return {
                 get: function (username, refresh, callback, errback) {
-                    var url = username;
+                    var url = 'plays/' + username;
                     if (refresh) { url = url + '?refresh=1'; }
                     $http.get(url)
                         .success(function (response) { callback(response); })
@@ -46,7 +46,6 @@
                     item.rank = rank;
                     ranked.push(item);
                 }
-                console.log(ranked);
                 return ranked;
             }
             return {
