@@ -15,6 +15,16 @@
     <hr>
     <div ng-show="reqCtrl.user">
         <img ng-src="https:[[reqCtrl.user.avatar_link]]"/>
+        <div ng-show="reqCtrl.playSummary">
+            <h3>Top [[ reqCtrl.playSummary.length ]] most played</h3>
+            <ul>
+                <li ng-repeat="game in reqCtrl.playSummary">
+                    [[game.rank]]. [[game.name]]: [[game.quantity]]
+                </li>
+            </ul>
+        </div>
+        <hr>
+        <h3>All games played by date</h3>
         <ul>
             <li ng-repeat="play in reqCtrl.user.plays track by $index">
                 [[play.date | date]] - [[play.name]]
