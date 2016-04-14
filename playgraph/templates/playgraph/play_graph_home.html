@@ -3,10 +3,14 @@
 <html>
 <head>
     <script src="{% static 'lib/angular.min.js' %}"></script>
+    <script src="{% static 'lib/d3.js' %}"></script>
     <script src="{% static 'playgraph/js/playgraph.js' %}"></script>
+    <script src="{% static 'playgraph/js/directives.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'playgraph/site.css' %}">
 </head>
 <body ng-app="PlayGraph">
-<div ng-controller="BGGRequestController as reqCtrl">
+<div ng-controller="BGGRequestController as reqCtrl" class="container">
     <label>Name:</label>
     <input type="text" ng-model="reqCtrl.bggUsername">
     <hr>
@@ -15,21 +19,33 @@
     <hr>
     <div ng-show="reqCtrl.user">
         <img ng-src="https:[[reqCtrl.user.avatar_link]]"/>
-        <div ng-show="reqCtrl.playSummary">
-            <h3>Top [[ reqCtrl.playSummary.length ]] most played</h3>
-            <ul>
-                <li ng-repeat="game in reqCtrl.playSummary">
-                    [[game.rank]]. [[game.name]]: [[game.quantity]]
+
+        <div ng-show="reqCtrl.playSummary" class="top-10 row">
+            <h3 class="">Top [[ reqCtrl.playSummary.length ]] most played</h3>
+            <ul class="list-group col-md-7">
+                <li ng-repeat="game in reqCtrl.playSummary" class="list-group-item">
+                    <div class="summary-element">
+                        [[ game | json ]]
+                        <!--<span class="rank rank-[[game.rank]]">[[game.rank]]</span> <img ng-src="[[game.thing.thumbnail]]"> [[game.name]]: [[game.quantity]]-->
+                    </div>
+                </li>
+            </ul>
+            <bar-chart chart-data="20,14" class="col-md-5"></bar-chart>
+        </div>
+
+        <hr>
+        <div class="all-plays">
+            <h3>All games played by date</h3>
+            <ul class="list-group">
+                <li ng-repeat="play in reqCtrl.user.plays track by $index" class="list-group-item">
+                    <div class="row">
+                        <div class="col-md-3">[[play.date | date]]</div>
+                        <div class="col-md-3"><img ng-src="[[play.thing.thumbnail]]" class="thumbnail-small"></div>
+                        <div class="col-md-6">[[play.name]]</div>
+                    </div>
                 </li>
             </ul>
         </div>
-        <hr>
-        <h3>All games played by date</h3>
-        <ul>
-            <li ng-repeat="play in reqCtrl.user.plays track by $index">
-                [[play.date | date]] - [[play.name]]
-            </li>
-        </ul>
     </div>
 </div>
 </body>
