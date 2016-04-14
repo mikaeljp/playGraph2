@@ -25,3 +25,18 @@ class BggPlay(models.Model):
     quantity = models.IntegerField()
     name = models.CharField(max_length=255)
     user = models.ForeignKey('BggUser', related_name='plays')
+    thing = models.ForeignKey('BggThing')
+
+
+class BggThing(models.Model):
+    """
+    Things are BGGs general entity for games, accessories and more.
+    Each thing can have different attributes depending on its subtype
+    For now, we're only really interested in a few, particularly the thumbnail image
+    """
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=255, db_index=True)
+    thumbnail = models.CharField(max_length=255)
+    year_published = models.IntegerField()
+    created = models.DateTimeField(editable=False, auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
