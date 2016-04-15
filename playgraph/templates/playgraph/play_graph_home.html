@@ -21,12 +21,12 @@
         <img ng-src="https:[[reqCtrl.user.avatar_link]]"/>
 
         <div ng-show="reqCtrl.playSummary" class="top-10 row">
-            <h3 class="">Top [[ reqCtrl.playSummary.length ]] most played</h3>
+            <h3 class="">Top [[ reqCtrl.playSummary.length ]] most played all time</h3>
             <ul class="list-group col-md-7">
                 <li ng-repeat="game in reqCtrl.playSummary" class="list-group-item">
                     <div class="summary-element">
-                        [[ game | json ]]
-                        <!--<span class="rank rank-[[game.rank]]">[[game.rank]]</span> <img ng-src="[[game.thing.thumbnail]]"> [[game.name]]: [[game.quantity]]-->
+                        <!--[[ game | json ]]-->
+                        <span class="rank rank-[[game.rank]]">[[game.rank]]</span> <img ng-src="[[game.thing.thumbnail]]"> [[game.name]]: [[game.quantity]]
                     </div>
                 </li>
             </ul>

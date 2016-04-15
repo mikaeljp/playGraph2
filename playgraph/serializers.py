@@ -16,21 +16,22 @@ class BggPlaySerializer(serializers.ModelSerializer):
 
     thing = BggThingSerializer(read_only=True)
 
-    def to_internal_value(self, data):
-        if not self.instance:
-            try:
-                thing = BggThing.objects.get(pk=data['object_id'])
-                data['thing'] = thing.id
-            except BggThing.DoesNotExist:
-                # the Thing hasn't been loaded yet
-                thing_data = get_bgg_thing(data['object_id'])
-                thing_data['name'] = data['name']
-                serializer = BggThingSerializer(data=thing_data)
-                serializer.is_valid(raise_exception=True)
-                serializer.save()
-                data['thing'] = serializer.data['id']
+    def object_id_to_thing(self, validated_data):
+        object_id = validated_data.pop('object_id')
+        try:
+            return BggThing.objects.get(pk=object_id)
+        except BggThing.DoesNotExist:
+            # the Thing hasn't been loaded yet
+            thing_data = get_bgg_thing(object_id)
+            thing_data['name'] = validated_data['name']
+            serializer = BggThingSerializer(data=thing_data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return serializer.instance
 
-        return super().to_internal_value(data)
+    def create(self, validated_data):
+        thing = self.object_id_to_thing(validated_data)
+        return BggPlay.objects.create(thing=thing, **validated_data)
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)

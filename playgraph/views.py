@@ -33,11 +33,14 @@ class PlayGraphDataView(View):
             user_serializer.is_valid(raise_exception=True)
             user_serializer.save()
             # fetch the plays
-            plays = get_bgg_plays(bgg_id)
-            play_serializer = BggPlaySerializer(data=plays, many=True)
-            play_serializer.is_valid(raise_exception=True)
-            play_serializer.save()
-            user_serializer.plays = play_serializer.data
+            plays = []
+            for play in get_bgg_plays(bgg_id):
+                object_id = play.pop('object_id')
+                play_serializer = BggPlaySerializer(data=play)
+                play_serializer.is_valid(raise_exception=True)
+                play_serializer.save(object_id=object_id)
+                plays.append(play_serializer.data)
+            user_serializer.plays = plays
 
         return JsonResponse(user_serializer.data, safe=False)
 
